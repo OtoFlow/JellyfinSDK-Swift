@@ -29,7 +29,7 @@ extension Item {
         Item(
             id: item.Id!,
             name: item.Name ?? "",
-            type: item._Type,
+            type: item._Type?.value1.rawValue,
             overview: item.Overview,
             artists: item.ArtistItems?.map(\.NameIdPair),
             imageTags: item.ImageTags?.additionalProperties,
@@ -40,7 +40,7 @@ extension Item {
             album: item.Album,
             albumID: item.AlbumId,
             albumArtists: item.AlbumArtists?.map(\.NameIdPair),
-            userData: item.UserData.map(UserData.convertFromOpenAPI)
+            userData: (item.UserData?.value1).map(UserData.convertFromOpenAPI)
         )
     }
 }

@@ -89,7 +89,7 @@ extension JellyfinClient {
         return systemInfo
     }
 
-    public func login(username: String, password: String) async throws -> Components.Schemas.AuthenticationResult {
+    public func signIn(username: String, password: String) async throws -> Components.Schemas.AuthenticationResult {
         let input = Operations.AuthenticateUserByName.Input(
             body: .json(
                 .init(
