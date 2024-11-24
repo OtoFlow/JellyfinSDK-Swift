@@ -1,0 +1,24 @@
+generate:
+  - types
+  - client
+
+filter:
+  tags:
+    - Items
+  operations:
+    # System
+    - GetPublicSystemInfo
+    # Library
+    - GetMediaFolders
+    # Users
+    - AuthenticateUserByName
+    # UserLibrary
+    - MarkFavoriteItem
+    - UnmarkFavoriteItem
+    # Artists
+    - GetArtists
+    - GetArtistByName
+    # MusicGenres
+    # - getMusicgenres
+
+accessModifier: public
