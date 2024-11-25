@@ -45,7 +45,6 @@ extension AuthenticationMiddleware: ClientMiddleware {
     ) async throws -> (HTTPResponse, HTTPBody?) {
         var request = request
         request.headerFields[.authorization] = authHeaders()
-        request.headerFields[.init("X-Emby-Token")!]  = accessToken
         return try await next(request, body, baseURL)
     }
 
@@ -56,11 +55,12 @@ extension AuthenticationMiddleware: ClientMiddleware {
             "Device": device,
             "DeviceId": deviceID,
             "UserId": userID,
+            "Token": accessToken
         ]
             .compactMap { key, value in
                 value.map { "\(key)=\($0)" }
             }
             .joined(separator: ", ")
-        return "Emby \(fields)"
+        return "MediaBrowser \(fields)"
     }
 }
