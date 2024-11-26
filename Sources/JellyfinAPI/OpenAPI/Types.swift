@@ -46,6 +46,11 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /Library/MediaFolders`.
     /// - Remark: Generated from `#/paths//Library/MediaFolders/get(GetMediaFolders)`.
     func GetMediaFolders(_ input: Operations.GetMediaFolders.Input) async throws -> Operations.GetMediaFolders.Output
+    /// Gets an item's lyrics.
+    ///
+    /// - Remark: HTTP `GET /Audio/{itemId}/Lyrics`.
+    /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)`.
+    func GetLyrics(_ input: Operations.GetLyrics.Input) async throws -> Operations.GetLyrics.Output
     /// Gets public information about the server.
     ///
     /// - Remark: HTTP `GET /System/Info/Public`.
@@ -166,6 +171,19 @@ extension APIProtocol {
     ) async throws -> Operations.GetMediaFolders.Output {
         try await GetMediaFolders(Operations.GetMediaFolders.Input(
             query: query,
+            headers: headers
+        ))
+    }
+    /// Gets an item's lyrics.
+    ///
+    /// - Remark: HTTP `GET /Audio/{itemId}/Lyrics`.
+    /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)`.
+    public func GetLyrics(
+        path: Operations.GetLyrics.Input.Path,
+        headers: Operations.GetLyrics.Input.Headers = .init()
+    ) async throws -> Operations.GetLyrics.Output {
+        try await GetLyrics(Operations.GetLyrics.Input(
+            path: path,
             headers: headers
         ))
     }
@@ -7298,6 +7316,262 @@ public enum Components {
             case Remote = "Remote"
             case Virtual = "Virtual"
             case Offline = "Offline"
+        }
+        /// LyricResponse model.
+        ///
+        /// - Remark: Generated from `#/components/schemas/LyricDto`.
+        public struct LyricDto: Codable, Hashable, Sendable {
+            /// Gets or sets Metadata for the lyrics.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricDto/Metadata`.
+            public struct MetadataPayload: Codable, Hashable, Sendable {
+                /// - Remark: Generated from `#/components/schemas/LyricDto/Metadata/value1`.
+                public var value1: Components.Schemas.LyricMetadata
+                /// Creates a new `MetadataPayload`.
+                ///
+                /// - Parameters:
+                ///   - value1:
+                public init(value1: Components.Schemas.LyricMetadata) {
+                    self.value1 = value1
+                }
+                public init(from decoder: any Decoder) throws {
+                    value1 = try .init(from: decoder)
+                }
+                public func encode(to encoder: any Encoder) throws {
+                    try value1.encode(to: encoder)
+                }
+            }
+            /// Gets or sets Metadata for the lyrics.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricDto/Metadata`.
+            public var Metadata: Components.Schemas.LyricDto.MetadataPayload?
+            /// Gets or sets a collection of individual lyric lines.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricDto/Lyrics`.
+            public var Lyrics: [Components.Schemas.LyricLine]?
+            /// Creates a new `LyricDto`.
+            ///
+            /// - Parameters:
+            ///   - Metadata: Gets or sets Metadata for the lyrics.
+            ///   - Lyrics: Gets or sets a collection of individual lyric lines.
+            public init(
+                Metadata: Components.Schemas.LyricDto.MetadataPayload? = nil,
+                Lyrics: [Components.Schemas.LyricLine]? = nil
+            ) {
+                self.Metadata = Metadata
+                self.Lyrics = Lyrics
+            }
+            public enum CodingKeys: String, CodingKey {
+                case Metadata
+                case Lyrics
+            }
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                Metadata = try container.decodeIfPresent(
+                    Components.Schemas.LyricDto.MetadataPayload.self,
+                    forKey: .Metadata
+                )
+                Lyrics = try container.decodeIfPresent(
+                    [Components.Schemas.LyricLine].self,
+                    forKey: .Lyrics
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "Metadata",
+                    "Lyrics"
+                ])
+            }
+        }
+        /// Lyric model.
+        ///
+        /// - Remark: Generated from `#/components/schemas/LyricLine`.
+        public struct LyricLine: Codable, Hashable, Sendable {
+            /// Gets the text of this lyric line.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricLine/Text`.
+            public var Text: Swift.String?
+            /// Gets the start time in ticks.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricLine/Start`.
+            public var Start: Swift.Int64?
+            /// Creates a new `LyricLine`.
+            ///
+            /// - Parameters:
+            ///   - Text: Gets the text of this lyric line.
+            ///   - Start: Gets the start time in ticks.
+            public init(
+                Text: Swift.String? = nil,
+                Start: Swift.Int64? = nil
+            ) {
+                self.Text = Text
+                self.Start = Start
+            }
+            public enum CodingKeys: String, CodingKey {
+                case Text
+                case Start
+            }
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                Text = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Text
+                )
+                Start = try container.decodeIfPresent(
+                    Swift.Int64.self,
+                    forKey: .Start
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "Text",
+                    "Start"
+                ])
+            }
+        }
+        /// LyricMetadata model.
+        ///
+        /// - Remark: Generated from `#/components/schemas/LyricMetadata`.
+        public struct LyricMetadata: Codable, Hashable, Sendable {
+            /// Gets or sets the song artist.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Artist`.
+            public var Artist: Swift.String?
+            /// Gets or sets the album this song is on.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Album`.
+            public var Album: Swift.String?
+            /// Gets or sets the title of the song.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Title`.
+            public var Title: Swift.String?
+            /// Gets or sets the author of the lyric data.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Author`.
+            public var Author: Swift.String?
+            /// Gets or sets the length of the song in ticks.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Length`.
+            public var Length: Swift.Int64?
+            /// Gets or sets who the LRC file was created by.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/By`.
+            public var By: Swift.String?
+            /// Gets or sets the lyric offset compared to audio in ticks.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Offset`.
+            public var Offset: Swift.Int64?
+            /// Gets or sets the software used to create the LRC file.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Creator`.
+            public var Creator: Swift.String?
+            /// Gets or sets the version of the creator used.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/Version`.
+            public var Version: Swift.String?
+            /// Gets or sets a value indicating whether this lyric is synced.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LyricMetadata/IsSynced`.
+            public var IsSynced: Swift.Bool?
+            /// Creates a new `LyricMetadata`.
+            ///
+            /// - Parameters:
+            ///   - Artist: Gets or sets the song artist.
+            ///   - Album: Gets or sets the album this song is on.
+            ///   - Title: Gets or sets the title of the song.
+            ///   - Author: Gets or sets the author of the lyric data.
+            ///   - Length: Gets or sets the length of the song in ticks.
+            ///   - By: Gets or sets who the LRC file was created by.
+            ///   - Offset: Gets or sets the lyric offset compared to audio in ticks.
+            ///   - Creator: Gets or sets the software used to create the LRC file.
+            ///   - Version: Gets or sets the version of the creator used.
+            ///   - IsSynced: Gets or sets a value indicating whether this lyric is synced.
+            public init(
+                Artist: Swift.String? = nil,
+                Album: Swift.String? = nil,
+                Title: Swift.String? = nil,
+                Author: Swift.String? = nil,
+                Length: Swift.Int64? = nil,
+                By: Swift.String? = nil,
+                Offset: Swift.Int64? = nil,
+                Creator: Swift.String? = nil,
+                Version: Swift.String? = nil,
+                IsSynced: Swift.Bool? = nil
+            ) {
+                self.Artist = Artist
+                self.Album = Album
+                self.Title = Title
+                self.Author = Author
+                self.Length = Length
+                self.By = By
+                self.Offset = Offset
+                self.Creator = Creator
+                self.Version = Version
+                self.IsSynced = IsSynced
+            }
+            public enum CodingKeys: String, CodingKey {
+                case Artist
+                case Album
+                case Title
+                case Author
+                case Length
+                case By
+                case Offset
+                case Creator
+                case Version
+                case IsSynced
+            }
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                Artist = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Artist
+                )
+                Album = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Album
+                )
+                Title = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Title
+                )
+                Author = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Author
+                )
+                Length = try container.decodeIfPresent(
+                    Swift.Int64.self,
+                    forKey: .Length
+                )
+                By = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .By
+                )
+                Offset = try container.decodeIfPresent(
+                    Swift.Int64.self,
+                    forKey: .Offset
+                )
+                Creator = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Creator
+                )
+                Version = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .Version
+                )
+                IsSynced = try container.decodeIfPresent(
+                    Swift.Bool.self,
+                    forKey: .IsSynced
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "Artist",
+                    "Album",
+                    "Title",
+                    "Author",
+                    "Length",
+                    "By",
+                    "Offset",
+                    "Creator",
+                    "Version",
+                    "IsSynced"
+                ])
+            }
         }
         /// Class MediaAttachment.
         ///
@@ -15436,6 +15710,343 @@ public enum Operations {
             /// - Throws: An error if `self` is not `.forbidden`.
             /// - SeeAlso: `.forbidden`.
             public var forbidden: Operations.GetMediaFolders.Output.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Gets an item's lyrics.
+    ///
+    /// - Remark: HTTP `GET /Audio/{itemId}/Lyrics`.
+    /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)`.
+    public enum GetLyrics {
+        public static let id: Swift.String = "GetLyrics"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/path`.
+            public struct Path: Sendable, Hashable {
+                /// Item id.
+                ///
+                /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/path/itemId`.
+                public var itemId: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - itemId: Item id.
+                public init(itemId: Swift.String) {
+                    self.itemId = itemId
+                }
+            }
+            public var path: Operations.GetLyrics.Input.Path
+            /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetLyrics.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetLyrics.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.GetLyrics.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            public init(
+                path: Operations.GetLyrics.Input.Path,
+                headers: Operations.GetLyrics.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.LyricDto)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.LyricDto {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/200/content/application\/json; profile="camelcase"`.
+                    case application_json_profile__quot_camelcase_quot_(Components.Schemas.LyricDto)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_camelcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_camelcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_camelcase_quot_`.
+                    public var application_json_profile__quot_camelcase_quot_: Components.Schemas.LyricDto {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_camelcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/200/content/application\/json; profile="pascalcase"`.
+                    case application_json_profile__quot_pascalcase_quot_(Components.Schemas.LyricDto)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_pascalcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_pascalcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_pascalcase_quot_`.
+                    public var application_json_profile__quot_pascalcase_quot_: Components.Schemas.LyricDto {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_pascalcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.GetLyrics.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.GetLyrics.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Lyrics returned.
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.GetLyrics.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.GetLyrics.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct NotFound: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/404/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/404/content/application\/json`.
+                    case json(Components.Schemas.ProblemDetails)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.ProblemDetails {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/404/content/application\/json; profile="camelcase"`.
+                    case application_json_profile__quot_camelcase_quot_(Components.Schemas.ProblemDetails)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_camelcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_camelcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_camelcase_quot_`.
+                    public var application_json_profile__quot_camelcase_quot_: Components.Schemas.ProblemDetails {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_camelcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Audio/{itemId}/Lyrics/GET/responses/404/content/application\/json; profile="pascalcase"`.
+                    case application_json_profile__quot_pascalcase_quot_(Components.Schemas.ProblemDetails)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_pascalcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_pascalcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_pascalcase_quot_`.
+                    public var application_json_profile__quot_pascalcase_quot_: Components.Schemas.ProblemDetails {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_pascalcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.GetLyrics.Output.NotFound.Body
+                /// Creates a new `NotFound`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.GetLyrics.Output.NotFound.Body) {
+                    self.body = body
+                }
+            }
+            /// Something went wrong. No Lyrics will be returned.
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/404`.
+            ///
+            /// HTTP response code: `404 notFound`.
+            case notFound(Operations.GetLyrics.Output.NotFound)
+            /// The associated value of the enum case if `self` is `.notFound`.
+            ///
+            /// - Throws: An error if `self` is not `.notFound`.
+            /// - SeeAlso: `.notFound`.
+            public var notFound: Operations.GetLyrics.Output.NotFound {
+                get throws {
+                    switch self {
+                    case let .notFound(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "notFound",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Unauthorized: Sendable, Hashable {
+                /// Creates a new `Unauthorized`.
+                public init() {}
+            }
+            /// Unauthorized
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/401`.
+            ///
+            /// HTTP response code: `401 unauthorized`.
+            case unauthorized(Operations.GetLyrics.Output.Unauthorized)
+            /// Unauthorized
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/401`.
+            ///
+            /// HTTP response code: `401 unauthorized`.
+            public static var unauthorized: Self {
+                .unauthorized(.init())
+            }
+            /// The associated value of the enum case if `self` is `.unauthorized`.
+            ///
+            /// - Throws: An error if `self` is not `.unauthorized`.
+            /// - SeeAlso: `.unauthorized`.
+            public var unauthorized: Operations.GetLyrics.Output.Unauthorized {
+                get throws {
+                    switch self {
+                    case let .unauthorized(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "unauthorized",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Forbidden: Sendable, Hashable {
+                /// Creates a new `Forbidden`.
+                public init() {}
+            }
+            /// Forbidden
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Operations.GetLyrics.Output.Forbidden)
+            /// Forbidden
+            ///
+            /// - Remark: Generated from `#/paths//Audio/{itemId}/Lyrics/get(GetLyrics)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            public static var forbidden: Self {
+                .forbidden(.init())
+            }
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Operations.GetLyrics.Output.Forbidden {
                 get throws {
                     switch self {
                     case let .forbidden(response):
