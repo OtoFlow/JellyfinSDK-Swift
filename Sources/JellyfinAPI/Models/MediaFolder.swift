@@ -7,9 +7,11 @@
 
 import Foundation
 
+public typealias CollectionType = Components.Schemas.CollectionType
+
 public struct MediaFolder {
-    let id: String
-    let collectionType: Components.Schemas.CollectionType?
+    public let id: String
+    public let collectionType: CollectionType?
 }
 
 extension MediaFolder {

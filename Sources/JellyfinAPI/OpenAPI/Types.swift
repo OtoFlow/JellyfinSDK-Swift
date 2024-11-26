@@ -21,6 +21,11 @@ public protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /Artists/{name}`.
     /// - Remark: Generated from `#/paths//Artists/{name}/get(GetArtistByName)`.
     func GetArtistByName(_ input: Operations.GetArtistByName.Input) async throws -> Operations.GetArtistByName.Output
+    /// Gets all genres from a given item, folder, or the entire library.
+    ///
+    /// - Remark: HTTP `GET /Genres`.
+    /// - Remark: Generated from `#/paths//Genres/get(GetGenres)`.
+    func GetGenres(_ input: Operations.GetGenres.Input) async throws -> Operations.GetGenres.Output
     /// Gets items based on a query.
     ///
     /// - Remark: HTTP `GET /Items`.
@@ -99,6 +104,19 @@ extension APIProtocol {
     ) async throws -> Operations.GetArtistByName.Output {
         try await GetArtistByName(Operations.GetArtistByName.Input(
             path: path,
+            query: query,
+            headers: headers
+        ))
+    }
+    /// Gets all genres from a given item, folder, or the entire library.
+    ///
+    /// - Remark: HTTP `GET /Genres`.
+    /// - Remark: Generated from `#/paths//Genres/get(GetGenres)`.
+    public func GetGenres(
+        query: Operations.GetGenres.Input.Query = .init(),
+        headers: Operations.GetGenres.Input.Headers = .init()
+    ) async throws -> Operations.GetGenres.Output {
+        try await GetGenres(Operations.GetGenres.Input(
             query: query,
             headers: headers
         ))
@@ -13521,6 +13539,370 @@ public enum Operations {
             /// - Throws: An error if `self` is not `.forbidden`.
             /// - SeeAlso: `.forbidden`.
             public var forbidden: Operations.GetArtistByName.Output.Forbidden {
+                get throws {
+                    switch self {
+                    case let .forbidden(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "forbidden",
+                            response: self
+                        )
+                    }
+                }
+            }
+            /// Undocumented response.
+            ///
+            /// A response with a code that is not documented in the OpenAPI document.
+            case undocumented(statusCode: Swift.Int, OpenAPIRuntime.UndocumentedPayload)
+        }
+        @frozen public enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case other(Swift.String)
+            public init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            public var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                }
+            }
+            public static var allCases: [Self] {
+                [
+                    .json
+                ]
+            }
+        }
+    }
+    /// Gets all genres from a given item, folder, or the entire library.
+    ///
+    /// - Remark: HTTP `GET /Genres`.
+    /// - Remark: Generated from `#/paths//Genres/get(GetGenres)`.
+    public enum GetGenres {
+        public static let id: Swift.String = "GetGenres"
+        public struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/Genres/GET/query`.
+            public struct Query: Sendable, Hashable {
+                /// Optional. The record index to start at. All items with a lower index will be dropped from the results.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/startIndex`.
+                public var startIndex: Swift.Int32?
+                /// Optional. The maximum number of records to return.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/limit`.
+                public var limit: Swift.Int32?
+                /// The search term.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/searchTerm`.
+                public var searchTerm: Swift.String?
+                /// Specify this to localize the search to a specific item or folder. Omit to use the root.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/parentId`.
+                public var parentId: Swift.String?
+                /// Optional. Specify additional fields of information to return in the output.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/fields`.
+                public var fields: [Components.Schemas.ItemFields]?
+                /// Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/excludeItemTypes`.
+                public var excludeItemTypes: [Components.Schemas.BaseItemKind]?
+                /// Optional. If specified, results will be filtered in based on item type. This allows multiple, comma delimited.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/includeItemTypes`.
+                public var includeItemTypes: [Components.Schemas.BaseItemKind]?
+                /// Optional filter by items that are marked as favorite, or not.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/isFavorite`.
+                public var isFavorite: Swift.Bool?
+                /// Optional, the max number of images to return, per image type.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/imageTypeLimit`.
+                public var imageTypeLimit: Swift.Int32?
+                /// Optional. The image types to include in the output.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/enableImageTypes`.
+                public var enableImageTypes: [Components.Schemas.ImageType]?
+                /// User id.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/userId`.
+                public var userId: Swift.String?
+                /// Optional filter by items whose name is sorted equally or greater than a given input string.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/nameStartsWithOrGreater`.
+                public var nameStartsWithOrGreater: Swift.String?
+                /// Optional filter by items whose name is sorted equally than a given input string.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/nameStartsWith`.
+                public var nameStartsWith: Swift.String?
+                /// Optional filter by items whose name is equally or lesser than a given input string.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/nameLessThan`.
+                public var nameLessThan: Swift.String?
+                /// Optional. Specify one or more sort orders, comma delimited.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/sortBy`.
+                public var sortBy: [Components.Schemas.ItemSortBy]?
+                /// Sort Order - Ascending,Descending.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/sortOrder`.
+                public var sortOrder: [Components.Schemas.SortOrder]?
+                /// Optional, include image information in output.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/enableImages`.
+                public var enableImages: Swift.Bool?
+                /// Optional. Include total record count.
+                ///
+                /// - Remark: Generated from `#/paths/Genres/GET/query/enableTotalRecordCount`.
+                public var enableTotalRecordCount: Swift.Bool?
+                /// Creates a new `Query`.
+                ///
+                /// - Parameters:
+                ///   - startIndex: Optional. The record index to start at. All items with a lower index will be dropped from the results.
+                ///   - limit: Optional. The maximum number of records to return.
+                ///   - searchTerm: The search term.
+                ///   - parentId: Specify this to localize the search to a specific item or folder. Omit to use the root.
+                ///   - fields: Optional. Specify additional fields of information to return in the output.
+                ///   - excludeItemTypes: Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.
+                ///   - includeItemTypes: Optional. If specified, results will be filtered in based on item type. This allows multiple, comma delimited.
+                ///   - isFavorite: Optional filter by items that are marked as favorite, or not.
+                ///   - imageTypeLimit: Optional, the max number of images to return, per image type.
+                ///   - enableImageTypes: Optional. The image types to include in the output.
+                ///   - userId: User id.
+                ///   - nameStartsWithOrGreater: Optional filter by items whose name is sorted equally or greater than a given input string.
+                ///   - nameStartsWith: Optional filter by items whose name is sorted equally than a given input string.
+                ///   - nameLessThan: Optional filter by items whose name is equally or lesser than a given input string.
+                ///   - sortBy: Optional. Specify one or more sort orders, comma delimited.
+                ///   - sortOrder: Sort Order - Ascending,Descending.
+                ///   - enableImages: Optional, include image information in output.
+                ///   - enableTotalRecordCount: Optional. Include total record count.
+                public init(
+                    startIndex: Swift.Int32? = nil,
+                    limit: Swift.Int32? = nil,
+                    searchTerm: Swift.String? = nil,
+                    parentId: Swift.String? = nil,
+                    fields: [Components.Schemas.ItemFields]? = nil,
+                    excludeItemTypes: [Components.Schemas.BaseItemKind]? = nil,
+                    includeItemTypes: [Components.Schemas.BaseItemKind]? = nil,
+                    isFavorite: Swift.Bool? = nil,
+                    imageTypeLimit: Swift.Int32? = nil,
+                    enableImageTypes: [Components.Schemas.ImageType]? = nil,
+                    userId: Swift.String? = nil,
+                    nameStartsWithOrGreater: Swift.String? = nil,
+                    nameStartsWith: Swift.String? = nil,
+                    nameLessThan: Swift.String? = nil,
+                    sortBy: [Components.Schemas.ItemSortBy]? = nil,
+                    sortOrder: [Components.Schemas.SortOrder]? = nil,
+                    enableImages: Swift.Bool? = nil,
+                    enableTotalRecordCount: Swift.Bool? = nil
+                ) {
+                    self.startIndex = startIndex
+                    self.limit = limit
+                    self.searchTerm = searchTerm
+                    self.parentId = parentId
+                    self.fields = fields
+                    self.excludeItemTypes = excludeItemTypes
+                    self.includeItemTypes = includeItemTypes
+                    self.isFavorite = isFavorite
+                    self.imageTypeLimit = imageTypeLimit
+                    self.enableImageTypes = enableImageTypes
+                    self.userId = userId
+                    self.nameStartsWithOrGreater = nameStartsWithOrGreater
+                    self.nameStartsWith = nameStartsWith
+                    self.nameLessThan = nameLessThan
+                    self.sortBy = sortBy
+                    self.sortOrder = sortOrder
+                    self.enableImages = enableImages
+                    self.enableTotalRecordCount = enableTotalRecordCount
+                }
+            }
+            public var query: Operations.GetGenres.Input.Query
+            /// - Remark: Generated from `#/paths/Genres/GET/header`.
+            public struct Headers: Sendable, Hashable {
+                public var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetGenres.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                public init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetGenres.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            public var headers: Operations.GetGenres.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - query:
+            ///   - headers:
+            public init(
+                query: Operations.GetGenres.Input.Query = .init(),
+                headers: Operations.GetGenres.Input.Headers = .init()
+            ) {
+                self.query = query
+                self.headers = headers
+            }
+        }
+        @frozen public enum Output: Sendable, Hashable {
+            public struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/Genres/GET/responses/200/content`.
+                @frozen public enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/Genres/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.BaseItemDtoQueryResult)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    public var json: Components.Schemas.BaseItemDtoQueryResult {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Genres/GET/responses/200/content/application\/json; profile="camelcase"`.
+                    case application_json_profile__quot_camelcase_quot_(Components.Schemas.BaseItemDtoQueryResult)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_camelcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_camelcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_camelcase_quot_`.
+                    public var application_json_profile__quot_camelcase_quot_: Components.Schemas.BaseItemDtoQueryResult {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_camelcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                    /// - Remark: Generated from `#/paths/Genres/GET/responses/200/content/application\/json; profile="pascalcase"`.
+                    case application_json_profile__quot_pascalcase_quot_(Components.Schemas.BaseItemDtoQueryResult)
+                    /// The associated value of the enum case if `self` is `.application_json_profile__quot_pascalcase_quot_`.
+                    ///
+                    /// - Throws: An error if `self` is not `.application_json_profile__quot_pascalcase_quot_`.
+                    /// - SeeAlso: `.application_json_profile__quot_pascalcase_quot_`.
+                    public var application_json_profile__quot_pascalcase_quot_: Components.Schemas.BaseItemDtoQueryResult {
+                        get throws {
+                            switch self {
+                            case let .application_json_profile__quot_pascalcase_quot_(body):
+                                return body
+                            default:
+                                try throwUnexpectedResponseBody(
+                                    expectedContent: "application/json",
+                                    body: self
+                                )
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                public var body: Operations.GetGenres.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                public init(body: Operations.GetGenres.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// Genres returned.
+            ///
+            /// - Remark: Generated from `#/paths//Genres/get(GetGenres)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.GetGenres.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            public var ok: Operations.GetGenres.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Unauthorized: Sendable, Hashable {
+                /// Creates a new `Unauthorized`.
+                public init() {}
+            }
+            /// Unauthorized
+            ///
+            /// - Remark: Generated from `#/paths//Genres/get(GetGenres)/responses/401`.
+            ///
+            /// HTTP response code: `401 unauthorized`.
+            case unauthorized(Operations.GetGenres.Output.Unauthorized)
+            /// Unauthorized
+            ///
+            /// - Remark: Generated from `#/paths//Genres/get(GetGenres)/responses/401`.
+            ///
+            /// HTTP response code: `401 unauthorized`.
+            public static var unauthorized: Self {
+                .unauthorized(.init())
+            }
+            /// The associated value of the enum case if `self` is `.unauthorized`.
+            ///
+            /// - Throws: An error if `self` is not `.unauthorized`.
+            /// - SeeAlso: `.unauthorized`.
+            public var unauthorized: Operations.GetGenres.Output.Unauthorized {
+                get throws {
+                    switch self {
+                    case let .unauthorized(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "unauthorized",
+                            response: self
+                        )
+                    }
+                }
+            }
+            public struct Forbidden: Sendable, Hashable {
+                /// Creates a new `Forbidden`.
+                public init() {}
+            }
+            /// Forbidden
+            ///
+            /// - Remark: Generated from `#/paths//Genres/get(GetGenres)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            case forbidden(Operations.GetGenres.Output.Forbidden)
+            /// Forbidden
+            ///
+            /// - Remark: Generated from `#/paths//Genres/get(GetGenres)/responses/403`.
+            ///
+            /// HTTP response code: `403 forbidden`.
+            public static var forbidden: Self {
+                .forbidden(.init())
+            }
+            /// The associated value of the enum case if `self` is `.forbidden`.
+            ///
+            /// - Throws: An error if `self` is not `.forbidden`.
+            /// - SeeAlso: `.forbidden`.
+            public var forbidden: Operations.GetGenres.Output.Forbidden {
                 get throws {
                     switch self {
                     case let .forbidden(response):

@@ -434,6 +434,214 @@ public struct Client: APIProtocol {
             }
         )
     }
+    /// Gets all genres from a given item, folder, or the entire library.
+    ///
+    /// - Remark: HTTP `GET /Genres`.
+    /// - Remark: Generated from `#/paths//Genres/get(GetGenres)`.
+    public func GetGenres(_ input: Operations.GetGenres.Input) async throws -> Operations.GetGenres.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.GetGenres.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/Genres",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "startIndex",
+                    value: input.query.startIndex
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "limit",
+                    value: input.query.limit
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "searchTerm",
+                    value: input.query.searchTerm
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "parentId",
+                    value: input.query.parentId
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "fields",
+                    value: input.query.fields
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "excludeItemTypes",
+                    value: input.query.excludeItemTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "includeItemTypes",
+                    value: input.query.includeItemTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "isFavorite",
+                    value: input.query.isFavorite
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "imageTypeLimit",
+                    value: input.query.imageTypeLimit
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "enableImageTypes",
+                    value: input.query.enableImageTypes
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "userId",
+                    value: input.query.userId
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "nameStartsWithOrGreater",
+                    value: input.query.nameStartsWithOrGreater
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "nameStartsWith",
+                    value: input.query.nameStartsWith
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "nameLessThan",
+                    value: input.query.nameLessThan
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "sortBy",
+                    value: input.query.sortBy
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "sortOrder",
+                    value: input.query.sortOrder
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "enableImages",
+                    value: input.query.enableImages
+                )
+                try converter.setQueryItemAsURI(
+                    in: &request,
+                    style: .form,
+                    explode: true,
+                    name: "enableTotalRecordCount",
+                    value: input.query.enableTotalRecordCount
+                )
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.GetGenres.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json",
+                            "application/json",
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BaseItemDtoQueryResult.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BaseItemDtoQueryResult.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .application_json_profile__quot_camelcase_quot_(value)
+                            }
+                        )
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.BaseItemDtoQueryResult.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .application_json_profile__quot_pascalcase_quot_(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                case 401:
+                    return .unauthorized(.init())
+                case 403:
+                    return .forbidden(.init())
+                default:
+                    return .undocumented(
+                        statusCode: response.status.code,
+                        .init(
+                            headerFields: response.headerFields,
+                            body: responseBody
+                        )
+                    )
+                }
+            }
+        )
+    }
     /// Gets items based on a query.
     ///
     /// - Remark: HTTP `GET /Items`.

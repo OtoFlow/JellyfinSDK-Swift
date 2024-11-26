@@ -18,8 +18,8 @@ filter:
     # Artists
     - GetArtists
     - GetArtistByName
-    # MusicGenres
-    # - getMusicgenres
+    # Genres
+    - GetGenres
     # Lyrics
     - GetLyrics
 
