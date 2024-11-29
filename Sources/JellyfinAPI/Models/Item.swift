@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias MediaSourceInfo = Components.Schemas.MediaSourceInfo
+
 public struct Item {
     public let id: String
     public let name: String
@@ -22,6 +24,7 @@ public struct Item {
     public let albumID: String?
     public let albumArtists: [NameIdPair]?
     public let userData: UserData?
+    public let mediaSources: [MediaSourceInfo]?
 }
 
 extension Item {
@@ -40,7 +43,8 @@ extension Item {
             album: item.Album,
             albumID: item.AlbumId,
             albumArtists: item.AlbumArtists?.map(\.NameIdPair),
-            userData: (item.UserData?.value1).map(UserData.convertFromOpenAPI)
+            userData: (item.UserData?.value1).map(UserData.convertFromOpenAPI),
+            mediaSources: item.MediaSources
         )
     }
 }

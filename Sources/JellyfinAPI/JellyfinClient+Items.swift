@@ -30,6 +30,7 @@ extension JellyfinClient {
                 recursive: isRecursive,
                 sortOrder: sortOrder.map { [$0] },
                 parentId: parentID,
+                fields: [.MediaSources],
                 includeItemTypes: types,
                 filters: filters,
                 sortBy: sortBy,
